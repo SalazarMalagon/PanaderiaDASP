@@ -6,8 +6,6 @@ import java.util.stream.Collectors; //Permite transformar, filtrar y recolectar 
 import java.io.FileWriter;//Sirve para escribir datos en archivos de texto
 import java.io.FileReader;//Sirve para leer archivos de texto
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import com.google.gson.Gson;//permite convertir objetos Java a JSON
 import com.google.gson.reflect.TypeToken;
@@ -94,5 +92,12 @@ public class almacenProductos {
         } catch (IOException e) {
             System.out.println("Error al guardar productos: " + e.getMessage());
         }
+    }
+
+    public producto buscarPorId(int id) {
+        for (producto p : productos) {
+            if (p.getIdProducto() == id) return p;
+        }
+        return null;
     }
 }

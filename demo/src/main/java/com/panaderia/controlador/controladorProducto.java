@@ -1,22 +1,24 @@
 package com.panaderia.controlador;
 
-import com.panaderia.vista.vistaProducto;
+import com.panaderia.vista.vistaProductoGUI;
 import com.panaderia.vista.vistaReporte;
 import com.panaderia.modelo.almacenProductos;
 import com.panaderia.reportes.generadorReporte;
 import com.panaderia.modelo.producto;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 public class controladorProducto {
 
-    private vistaProducto vistaProducto;
+    private vistaProductoGUI vistaProductoGUI;
     private vistaReporte vistaReporte;
     private almacenProductos almacenProductos;
     private generadorReporte generadorReporte;
     
-    public controladorProducto(vistaProducto vistaProducto, vistaReporte vistaReporte,
+    public controladorProducto(vistaProductoGUI vistaProductoGUI, vistaReporte vistaReporte,
                                almacenProductos almacenProductos, generadorReporte generadorReporte) {
-        this.vistaProducto = vistaProducto;
+        this.vistaProductoGUI = vistaProductoGUI;
         this.vistaReporte = vistaReporte;
         this.almacenProductos = almacenProductos;
         this.generadorReporte = generadorReporte;
@@ -27,21 +29,36 @@ public class controladorProducto {
     }
 
     public void agregarProducto() {
-        producto nuevoProducto = vistaProducto.solicitarDatosProducto();
+        producto nuevoProducto = vistaProductoGUI.solicitarDatosProducto();
         almacenProductos.agregarProducto(nuevoProducto);
         almacenProductos.guardarProductosEnArchivo();
     }
 
-    public void actualizarProducto(int idProducto) {
-        producto actualizado = vistaProducto.solicitarDatosProducto();
-        actualizado.setIdProducto(idProducto);
-        almacenProductos.actualizarProducto(actualizado);
+    public void actualizarProducto() {
+        int idProducto = vistaProductoGUI.obtenerIdProductoSeleccionado();
+        if (idProducto == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione un producto para actualizar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        producto productoActualizado = vistaProductoGUI.solicitarDatosProducto();
+        productoActualizado.setIdProducto(idProducto);
+        almacenProductos.actualizarProducto(productoActualizado);
         almacenProductos.guardarProductosEnArchivo();
+        listarProductos(); // Actualizar la tabla
     }
 
-    public void eliminarProducto(int idProducto) {
-        almacenProductos.eliminarProducto(idProducto);
-        almacenProductos.guardarProductosEnArchivo();
+    public void eliminarProducto() {
+        int idProducto = vistaProductoGUI.obtenerIdProductoSeleccionado();
+        if (idProducto == -1) {
+            JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int confirmacion = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar este producto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            almacenProductos.eliminarProducto(idProducto);
+            almacenProductos.guardarProductosEnArchivo();
+            listarProductos(); // Actualizar la tabla
+        }
     }
 
     public void generarReporte() {
@@ -68,7 +85,7 @@ public class controladorProducto {
         };
 
         if (resultado != null) {
-            vistaProducto.mostrarListaProductos(resultado);
+            vistaProductoGUI.mostrarListaProductos(resultado);
         } else {
             System.out.println("Criterio no válido.");
         }
@@ -80,7 +97,41 @@ public class controladorProducto {
 
     public void listarProductos() {
         List<producto> productos = almacenProductos.obtenerTodosProductos();
-        vistaProducto.mostrarListaProductos(productos);
+        vistaProductoGUI.mostrarListaProductos(productos);
+    }
+
+    public void inicializar() {
+        vistaProductoGUI.addAgregarListener(e -> {
+            agregarProducto();
+            listarProductos();
+        });
+    
+        vistaProductoGUI.addActualizarListener(e -> actualizarProducto());
+        vistaProductoGUI.addEliminarListener(e -> eliminarProducto());
+    
+        vistaProductoGUI.addBuscarListener(e -> {
+            String texto = vistaProductoGUI.getTextoBusqueda().trim();
+            if (texto.isEmpty()) {
+                listarProductos(); // Mostrar todos si no hay filtro
+                return;
+            }
+    
+            try {
+                if (texto.matches("\\d+")) { // Si es solo números, busca por ID
+                    int id = Integer.parseInt(texto);
+                    producto p = almacenProductos.buscarPorId(id);
+                    if (p != null) {
+                        vistaProductoGUI.mostrarListaProductos(List.of(p));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontró producto con ID: " + id);
+                    }
+                } else { // Si es texto, busca por nombre
+                    filtrarProductos("nombre", texto);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error al filtrar: " + ex.getMessage());
+            }
+        });
     }
 
 
