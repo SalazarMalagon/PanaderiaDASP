@@ -1,24 +1,2 @@
-[
-    {"idProducto":1,
-    "nombre":"pan frances",
-    "stock":120,
     "precio":500.0,
-    "costo":800.0},
-
-    {"idProducto":2,
-    "nombre":"Galleta de avena",
-    "stock":60,
-    "precio":1500.0,
-    "costo":900.0},
-
-    {"idProducto":3,
-    "nombre":"Pan de queso",
-    "stock":90,"precio":1200.0,
-    "costo":700.0},
-
-    {"idProducto":4,
-    "nombre":"Galleta de chocolate",
-    "stock":30,
-    "precio":5000.0,
-    "costo":3000.0}
-]
+[{"idProducto":1,"nombre":"pan frances","stock":150,"precio":500.0,"costo":800.0},{"idProducto":2,"nombre":"Galleta de avena","stock":60,"precio":1500.0,"costo":900.0},{"idProducto":3,"nombre":"Pan de queso","stock":90,"precio":1200.0,"costo":700.0},{"idProducto":4,"nombre":"Galleta de chocolate","stock":30,"precio":5000.0,"costo":3000.0}]
