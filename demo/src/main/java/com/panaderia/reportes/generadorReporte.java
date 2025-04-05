@@ -1,16 +1,23 @@
 package com.panaderia.reportes;
 
 import com.panaderia.modelo.producto;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class generadorReporte {
 
     public void generarCSV(List<producto> productos) {
-        // Lógica para generar un reporte CSV
-        System.out.println("Generando reporte CSV...");
+        try (FileWriter writer = new FileWriter("reporte_productos.csv")) {
+        writer.write("ID,Nombre,Stock,Precio,Costo\n");
         for (producto p : productos) {
-            // Ejemplo: Imprimir cada producto en formato CSV
-            System.out.println(p.getIdProducto() + "," + p.getNombre() + "," + p.getStock() + "," + p.getPrecio() + "," + p.getCosto());
+            writer.write(p.getIdProducto() + "," + p.getNombre() + "," +
+                         p.getStock() + "," + p.getPrecio() + "," + p.getCosto() + "\n");
+        }
+            System.out.println("Reporte CSV generado con éxito.");
+        } catch (IOException e) {
+            System.out.println("Error al generar reporte CSV: " + e.getMessage());
         }
     }
 
