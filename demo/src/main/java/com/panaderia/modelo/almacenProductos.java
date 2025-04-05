@@ -6,6 +6,9 @@ import java.util.stream.Collectors; //Permite transformar, filtrar y recolectar 
 import java.io.FileWriter;//Sirve para escribir datos en archivos de texto
 import java.io.FileReader;//Sirve para leer archivos de texto
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import com.google.gson.Gson;//permite convertir objetos Java a JSON
 import com.google.gson.reflect.TypeToken;
 
@@ -18,6 +21,13 @@ public class almacenProductos {
     }
 
     public void agregarProducto(producto producto) {
+        // Asignar un ID automáticamente
+        int nuevoId = productos.stream()
+                       .mapToInt(p -> p.getIdProducto())
+                       .max()
+                       .orElse(0) + 1;
+    
+        producto.setIdProducto(nuevoId);
         productos.add(producto);
     }
 
@@ -70,8 +80,10 @@ public class almacenProductos {
             if (productos == null) {
                 productos = new ArrayList<>();
             }
+            System.out.println("✅ Productos cargados desde productos.json");
         } catch (IOException e) {
-            System.out.println("Error al cargar productos: " + e.getMessage());
+            System.out.println("❌ Error al cargar productos: " + e.getMessage());
+            productos = new ArrayList<>(); // fallback para evitar null
         }
     }
 
