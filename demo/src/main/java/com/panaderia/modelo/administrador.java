@@ -17,10 +17,9 @@ public class administrador extends usuario{
         this.clave = clave;
     }
     
-    // public void realizarCambiosEnElSistema() {
-    //     // Implementa la lógica para cambios administrativos
-    //     System.out.println("Cambios realizados en el sistema por el administrador.");
-    // }
+    public boolean verificarContraseña(String claveIngresada) {
+        return this.clave.equals(claveIngresada);
+    }
 
     @Override
     public String toString() {

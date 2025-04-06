@@ -1,0 +1,5 @@
+ID,Nombre,Stock,Precio,Costo,Tipo,Características
+1,Pan francÃ©s,150,800.0,500.0,Pan,Queso: No
+2,Galleta de avena,60,1500.0,900.0,Genérico,N/A
+3,Pan de queso,90,1200.0,700.0,Genérico,N/A
+4,Galleta de chocolate,30,5000.0,3000.0,Genérico,N/A
