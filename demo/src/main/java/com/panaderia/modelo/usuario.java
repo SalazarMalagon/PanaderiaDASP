@@ -12,7 +12,6 @@ public class usuario {
         this.correo = correo;
     }
 
-    // Getters y Setters
     public int getidUsuario() {
         return idUsuario;
     }
@@ -36,10 +35,6 @@ public class usuario {
     public void setcorreo(String correo) {
         this.correo = correo;
     }
-    // public boolean autenticar(String correo, String password) {
-    //     // Lógica de autenticación (por ejemplo, verificar contra datos almacenados)
-    //     return this.correo.equals(correo);
-    // }
 
     @Override
     public String toString() {
