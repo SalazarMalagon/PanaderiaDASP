@@ -66,9 +66,9 @@ public class almacenProductos {
             jsonObject.addProperty("tipo", src.getTipo());  // Serializa el tipo directamente
             
             if (src instanceof pan) {
-                jsonObject.addProperty("tieneQueso", ((pan) src).gettieneQueso());
+                jsonObject.addProperty("tieneQueso", ((pan) src).getTieneQueso());
             } else if (src instanceof galleta) {
-                jsonObject.addProperty("tieneChispas", ((galleta) src).gettieneChispas());
+                jsonObject.addProperty("tieneChispas", ((galleta) src).getTieneChispas());
             }
             
             return jsonObject;

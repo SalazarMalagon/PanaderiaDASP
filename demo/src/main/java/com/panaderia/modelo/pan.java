@@ -9,15 +9,14 @@ public class pan extends producto {
         this.tieneQueso = tieneQueso;
         setTipo("Pan");
     }
-
-    public boolean gettieneQueso() {
+    
+    public boolean getTieneQueso() {
         return tieneQueso;
     }
-
-    public void settieneQueso(boolean tieneQueso) {
+    
+    public void setTieneQueso(boolean tieneQueso) {
         this.tieneQueso = tieneQueso;
     }
-
 
     @Override
     public String obtenerDescripcionDetallada() {
@@ -31,8 +30,5 @@ public class pan extends producto {
                 "tieneQueso='" + tieneQueso + '\'' +
                 '}';
     }
-
-    
-
 }
 

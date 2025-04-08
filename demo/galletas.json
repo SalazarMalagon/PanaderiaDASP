@@ -1,0 +1,92 @@
+[
+  {
+    "idProducto": 2,
+    "nombre": "Galleta de Avena",
+    "stock": 60,
+    "costo": 900.0,
+    "precio": 1500.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 4,
+    "nombre": "Galleta de Chocolate",
+    "stock": 30,
+    "costo": 3000.0,
+    "precio": 5000.0,
+    "tipo": "Galleta",
+    "tieneChispas": true
+  },
+  {
+    "idProducto": 6,
+    "nombre": "Galleta de Mantequilla",
+    "stock": 80,
+    "costo": 700.0,
+    "precio": 1200.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 8,
+    "nombre": "Galleta de Vainilla",
+    "stock": 70,
+    "costo": 800.0,
+    "precio": 1300.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 10,
+    "nombre": "Galleta de Almendra",
+    "stock": 55,
+    "costo": 1100.0,
+    "precio": 1800.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 12,
+    "nombre": "Galleta de Jengibre",
+    "stock": 45,
+    "costo": 950.0,
+    "precio": 1600.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 14,
+    "nombre": "Galleta de Coco",
+    "stock": 50,
+    "costo": 1000.0,
+    "precio": 1700.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 16,
+    "nombre": "Galleta de Limón",
+    "stock": 40,
+    "costo": 850.0,
+    "precio": 1400.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 18,
+    "nombre": "Galleta de Canela",
+    "stock": 60,
+    "costo": 870.0,
+    "precio": 1450.0,
+    "tipo": "Galleta",
+    "tieneChispas": false
+  },
+  {
+    "idProducto": 20,
+    "nombre": "Galleta de Avena y Pasas",
+    "stock": 45,
+    "costo": 990.0,
+    "precio": 1650.0,
+    "tipo": "Galleta",
+    "tieneChispas": true
+  }
+]

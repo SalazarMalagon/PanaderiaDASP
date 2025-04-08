@@ -2,7 +2,7 @@ package com.panaderia.app;
 
 import com.panaderia.controlador.controladorAutenticacion;
 import com.panaderia.controlador.controladorProducto;
-import com.panaderia.modelo.almacenProductos;
+import com.panaderia.servicio.GestorProductos;
 import com.panaderia.reportes.generadorReporte;
 import com.panaderia.vista.vistaLogin;
 import com.panaderia.vista.vistaProductoGUI;
@@ -28,10 +28,10 @@ public class Main {
     private static void iniciarAplicacion() {
         vistaProductoGUI vista = new vistaProductoGUI();
         vistaReporte reporte = new vistaReporte();
-        almacenProductos almacen = new almacenProductos();
+        GestorProductos gestor = new GestorProductos();
         generadorReporte generador = new generadorReporte();
 
-        controladorProducto controlador = new controladorProducto(vista, reporte, almacen, generador);
+        controladorProducto controlador = new controladorProducto(vista, reporte, gestor, generador);
         controlador.cargarProductos();
         controlador.listarProductos();
         controlador.inicializar();

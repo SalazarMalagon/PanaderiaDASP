@@ -34,10 +34,10 @@ public class generadorReporte {
                 
                 if (p instanceof pan) {
                     tipo = "Pan";
-                    caracteristicas = "Queso: " + (((pan) p).gettieneQueso() ? "Sí" : "No");
+                    caracteristicas = "Queso: " + (((pan) p).getTieneQueso() ? "Sí" : "No");
                 } else if (p instanceof galleta) {
                     tipo = "Galleta";
-                    caracteristicas = "Chispas: " + (((galleta) p).gettieneChispas() ? "Sí" : "No");
+                    caracteristicas = "Chispas: " + (((galleta) p).getTieneChispas() ? "Sí" : "No");
                 }
                 
                 double margen = ((p.getPrecio() - p.getCosto()) / p.getCosto()) * 100;

@@ -289,10 +289,10 @@ public class vistaProductoGUI extends JFrame {
         
         if (p instanceof pan) {
             tipo = "Pan";
-            caracteristica = "Queso: " + (((pan) p).gettieneQueso() ? "Sí" : "No");
+            caracteristica = "Queso: " + (((pan) p).getTieneQueso() ? "Sí" : "No");
         } else if (p instanceof galleta) {
             tipo = "Galleta";
-            caracteristica = "Chispas: " + (((galleta) p).gettieneChispas() ? "Sí" : "No");
+            caracteristica = "Chispas: " + (((galleta) p).getTieneChispas() ? "Sí" : "No");
         }
         
         model.addRow(new Object[]{
