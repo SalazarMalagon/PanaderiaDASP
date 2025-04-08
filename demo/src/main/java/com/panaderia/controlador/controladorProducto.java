@@ -2,10 +2,7 @@ package com.panaderia.controlador;
 
 import com.panaderia.vista.vistaProductoGUI;
 import com.panaderia.vista.vistaReporte;
-
-import scorex.util.ArrayList;
-
-import com.panaderia.modelo.almacenProductos;
+import com.panaderia.servicio.GestorProductos;
 import com.panaderia.reportes.generadorReporte;
 import com.panaderia.modelo.producto;
 
@@ -13,24 +10,25 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import java.util.List;
+import java.util.ArrayList;
 
 public class controladorProducto {
 
     private vistaProductoGUI vistaProductoGUI;
     private vistaReporte vistaReporte;
-    private almacenProductos almacenProductos;
+    private GestorProductos gestorProductos;
     private generadorReporte generadorReporte;
     
     public controladorProducto(vistaProductoGUI vistaProductoGUI, vistaReporte vistaReporte,
-                               almacenProductos almacenProductos, generadorReporte generadorReporte) {
+                               GestorProductos gestorProductos, generadorReporte generadorReporte) {
         this.vistaProductoGUI = vistaProductoGUI;
         this.vistaReporte = vistaReporte;
-        this.almacenProductos = almacenProductos;
+        this.gestorProductos = gestorProductos;
         this.generadorReporte = generadorReporte;
     }
 
     public void cargarProductos() {
-        almacenProductos.cargarProductosDesdeArchivo();
+        gestorProductos.cargarTodos();
     }
 
     public void agregarProducto() {
@@ -41,8 +39,8 @@ public class controladorProducto {
                 nuevoProducto.validarPrecioVenta();
                 nuevoProducto.validarStockNoNegativo();
                 
-                almacenProductos.agregarProducto(nuevoProducto);
-                almacenProductos.guardarProductosEnArchivo();
+                gestorProductos.guardarProducto(nuevoProducto);
+                gestorProductos.guardarTodos();
                 listarProductos();
                 JOptionPane.showMessageDialog(null, "Producto agregado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -66,8 +64,8 @@ public class controladorProducto {
                 productoActualizado.validarPrecioVenta();
                 productoActualizado.validarStockNoNegativo();
                 
-                almacenProductos.actualizarProducto(productoActualizado);
-                almacenProductos.guardarProductosEnArchivo();
+                gestorProductos.actualizarProducto(productoActualizado);
+                gestorProductos.guardarTodos();
                 listarProductos(); 
                 JOptionPane.showMessageDialog(null, "Producto actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -86,8 +84,8 @@ public class controladorProducto {
             "¿Está seguro de que desea eliminar este producto?", 
             "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            almacenProductos.eliminarProducto(idProducto);
-            almacenProductos.guardarProductosEnArchivo();
+            gestorProductos.eliminarProducto(idProducto);
+            gestorProductos.guardarTodos();
             listarProductos();
             JOptionPane.showMessageDialog(null, "Producto eliminado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -102,7 +100,7 @@ public class controladorProducto {
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             try {
                 String rutaArchivo = fileChooser.getSelectedFile().getAbsolutePath();
-                List<producto> productos = almacenProductos.obtenerTodosProductos();
+                List<producto> productos = gestorProductos.obtenerTodosProductos();
                 generadorReporte.generarCSV(productos, rutaArchivo);
                 vistaReporte.mostrarMensajeReporteGenerado();
                 JOptionPane.showMessageDialog(null, 
@@ -123,17 +121,17 @@ public class controladorProducto {
         try {
             switch (criterio.toLowerCase()) {
                 case "nombre":
-                    resultado = almacenProductos.filtrarPorNombre(valorMin);
+                    resultado = gestorProductos.filtrarPorNombre(valorMin);
                     break;
                 case "precio":
                     double min = Double.parseDouble(valorMin);
                     double max = Double.parseDouble(valorMax);
-                    resultado = almacenProductos.filtrarPorPrecio(min, max);
+                    resultado = gestorProductos.filtrarPorPrecio(min, max);
                     break;
                 case "cantidad":
                     int minCant = Integer.parseInt(valorMin);
                     int maxCant = Integer.parseInt(valorMax);
-                    resultado = almacenProductos.filtrarPorCantidad(minCant, maxCant);
+                    resultado = gestorProductos.filtrarPorCantidad(minCant, maxCant);
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, 
@@ -164,11 +162,11 @@ public class controladorProducto {
     }
 
     public List<producto> obtenerProductos() {
-        return almacenProductos.obtenerTodosProductos();
+        return gestorProductos.obtenerTodosProductos();
     }
 
     public void listarProductos() {
-        List<producto> productos = almacenProductos.obtenerTodosProductos();
+        List<producto> productos = gestorProductos.obtenerTodosProductos();
         vistaProductoGUI.mostrarListaProductos(productos);
     }
 
@@ -188,14 +186,16 @@ public class controladorProducto {
             try {
                 if (texto.matches("\\d+")) {
                     int id = Integer.parseInt(texto);
-                    producto p = almacenProductos.buscarPorId(id);
+                    producto p = gestorProductos.buscarPorId(id);
                     if (p != null) {
-                        vistaProductoGUI.mostrarListaProductos(List.of(p));
+                        List<producto> lista = new ArrayList<>();
+                        lista.add(p);
+                        vistaProductoGUI.mostrarListaProductos(lista);
                     } else {
                         JOptionPane.showMessageDialog(null, "No se encontró producto con ID: " + id);
                     }
                 } else {
-                    List<producto> resultados = almacenProductos.filtrarPorNombre(texto);
+                    List<producto> resultados = gestorProductos.filtrarPorNombre(texto);
                     vistaProductoGUI.mostrarListaProductos(resultados);
                     if (resultados.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "No se encontraron productos con ese nombre.");
@@ -216,7 +216,7 @@ public class controladorProducto {
                 String valorMax = vistaProductoGUI.getValorMaxBusqueda();
                 filtrarProductos(criterio, valorMin, valorMax);
             } else if ("Mostrar Todos".equals(buttonText)) {
-                vistaProductoGUI.mostrarProductosFiltrados(almacenProductos.obtenerTodosProductos());
+                vistaProductoGUI.mostrarProductosFiltrados(gestorProductos.obtenerTodosProductos());
             }
         });
     }

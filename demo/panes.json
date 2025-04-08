@@ -1,0 +1,92 @@
+[
+  {
+    "idProducto": 1,
+    "nombre": "Pan Francés",
+    "stock": 150,
+    "costo": 500.0,
+    "precio": 800.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 3,
+    "nombre": "Pan de Queso",
+    "stock": 90,
+    "costo": 700.0,
+    "precio": 1200.0,
+    "tipo": "Pan",
+    "tieneQueso": true
+  },
+  {
+    "idProducto": 5,
+    "nombre": "Pan Integral",
+    "stock": 45,
+    "costo": 550.0,
+    "precio": 900.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 7,
+    "nombre": "Pan de Ajo",
+    "stock": 60,
+    "costo": 600.0,
+    "precio": 1000.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 9,
+    "nombre": "Pan de Centeno",
+    "stock": 40,
+    "costo": 650.0,
+    "precio": 1100.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 11,
+    "nombre": "Pan de Maíz",
+    "stock": 35,
+    "costo": 570.0,
+    "precio": 950.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 13,
+    "nombre": "Pan de Leche",
+    "stock": 65,
+    "costo": 520.0,
+    "precio": 880.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 15,
+    "nombre": "Pan de Aceitunas",
+    "stock": 30,
+    "costo": 780.0,
+    "precio": 1300.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 17,
+    "nombre": "Pan de Calabaza",
+    "stock": 25,
+    "costo": 720.0,
+    "precio": 1200.0,
+    "tipo": "Pan",
+    "tieneQueso": false
+  },
+  {
+    "idProducto": 19,
+    "nombre": "Pan de Queso con Jalapeño",
+    "stock": 35,
+    "costo": 900.0,
+    "precio": 1500.0,
+    "tipo": "Pan",
+    "tieneQueso": true
+  }
+]

@@ -9,12 +9,12 @@ public class galleta extends producto {
         this.tieneChispas = tieneChispas;
         setTipo("Galleta"); 
     }
-
-    public boolean gettieneChispas() {
+    
+    public boolean getTieneChispas() {
         return tieneChispas;
     }
 
-    public void settieneChispas(boolean tieneChispas) {
+    public void setTieneChispas(boolean tieneChispas) {
         this.tieneChispas = tieneChispas;
     }
 
@@ -30,5 +30,4 @@ public class galleta extends producto {
                 "tieneChispas='" + tieneChispas + '\'' +
                 '}';
     }
-
 }
