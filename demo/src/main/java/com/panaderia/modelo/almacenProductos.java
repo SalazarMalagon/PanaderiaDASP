@@ -14,16 +14,27 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * Clase que representa un almacén de productos.
+ * Gestiona la lista de productos en memoria y su persistencia en un archivo JSON.
+ * Permite realizar operaciones CRUD y filtrar productos según diferentes criterios.
+ */
 public class almacenProductos {
 
-    private List<producto> productos;
-    private final Gson gson;
+    private List<producto> productos; // Lista de productos en memoria
+    private final Gson gson; // Objeto Gson para serialización/deserialización
 
+    /**
+     * Constructor de la clase almacenProductos.
+     * Configura los serializadores y deserializadores personalizados para los productos.
+     * Inicializa la lista de productos.
+     */
     public almacenProductos() {
         this.productos = new ArrayList<>();
         
         GsonBuilder gsonBuilder = new GsonBuilder();
         
+        // Configuración del deserializador personalizado
         JsonDeserializer<producto> deserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
             
@@ -32,7 +43,6 @@ public class almacenProductos {
             int stock = jsonObject.get("stock").getAsInt();
             double costo = jsonObject.get("costo").getAsDouble();
             double precio = jsonObject.get("precio").getAsDouble();
-            
             
             if (jsonObject.has("tipo")) {
                 String tipo = jsonObject.get("tipo").getAsString();
@@ -55,6 +65,7 @@ public class almacenProductos {
             return new producto(id, nombre, stock, costo, precio);
         };
         
+        // Configuración del serializador personalizado
         JsonSerializer<producto> serializer = (src, typeOfSrc, context) -> {
             JsonObject jsonObject = new JsonObject();
             
@@ -63,7 +74,7 @@ public class almacenProductos {
             jsonObject.addProperty("stock", src.getStock());
             jsonObject.addProperty("costo", src.getCosto());
             jsonObject.addProperty("precio", src.getPrecio());
-            jsonObject.addProperty("tipo", src.getTipo());  // Serializa el tipo directamente
+            jsonObject.addProperty("tipo", src.getTipo());
             
             if (src instanceof pan) {
                 jsonObject.addProperty("tieneQueso", ((pan) src).getTieneQueso());
@@ -80,6 +91,11 @@ public class almacenProductos {
         gson = gsonBuilder.create();
     }
 
+    /**
+     * Agrega un nuevo producto al almacén.
+     * Asigna automáticamente un ID único al producto.
+     * @param producto El producto a agregar.
+     */
     public void agregarProducto(producto producto) {
         int nuevoId = productos.stream()
                        .mapToInt(p -> p.getIdProducto())
@@ -90,10 +106,18 @@ public class almacenProductos {
         productos.add(producto);
     }
 
+    /**
+     * Elimina un producto del almacén por su ID.
+     * @param idProducto El ID del producto a eliminar.
+     */
     public void eliminarProducto(int idProducto) {
         productos.removeIf(p -> p.getIdProducto() == idProducto);
     }
 
+    /**
+     * Actualiza un producto existente en el almacén.
+     * @param productoActualizado El producto con los datos actualizados.
+     */
     public void actualizarProducto(producto productoActualizado) {
         for (int i = 0; i < productos.size(); i++) {
             if (productos.get(i).getIdProducto() == productoActualizado.getIdProducto()) {
@@ -103,6 +127,11 @@ public class almacenProductos {
         }
     }
 
+    /**
+     * Obtiene un producto por su ID.
+     * @param idProducto El ID del producto a buscar.
+     * @return El producto encontrado o `null` si no existe.
+     */
     public producto obtenerProductoPorId(int idProducto) {
         return productos.stream()
                 .filter(p -> p.getIdProducto() == idProducto)
@@ -110,10 +139,19 @@ public class almacenProductos {
                 .orElse(null);
     }
 
+    /**
+     * Obtiene todos los productos almacenados.
+     * @return Una lista con todos los productos.
+     */
     public List<producto> obtenerTodosProductos() {
         return new ArrayList<>(productos);
     }
 
+    /**
+     * Filtra los productos por nombre.
+     * @param nombre El nombre o parte del nombre a buscar.
+     * @return Una lista de productos que coinciden con el criterio.
+     */
     public List<producto> filtrarPorNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
             return new ArrayList<>(productos);
@@ -125,18 +163,34 @@ public class almacenProductos {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Filtra los productos por un rango de precios.
+     * @param minPrecio El precio mínimo.
+     * @param maxPrecio El precio máximo.
+     * @return Una lista de productos dentro del rango de precios.
+     */
     public List<producto> filtrarPorPrecio(double minPrecio, double maxPrecio) {
         return productos.stream()
                 .filter(p -> p.getPrecio() >= minPrecio && p.getPrecio() <= maxPrecio)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Filtra los productos por un rango de cantidades en stock.
+     * @param minCantidad La cantidad mínima.
+     * @param maxCantidad La cantidad máxima.
+     * @return Una lista de productos dentro del rango de cantidades.
+     */
     public List<producto> filtrarPorCantidad(int minCantidad, int maxCantidad) {
         return productos.stream()
                 .filter(p -> p.getStock() >= minCantidad && p.getStock() <= maxCantidad)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Carga los productos desde un archivo JSON.
+     * Si el archivo no existe o está vacío, inicializa una lista vacía.
+     */
     public void cargarProductosDesdeArchivo() {
         try (FileReader reader = new FileReader("demo/productos.json")) {
             productos = gson.fromJson(reader, new TypeToken<List<producto>>(){}.getType());
@@ -150,6 +204,9 @@ public class almacenProductos {
         }
     }
 
+    /**
+     * Guarda los productos en un archivo JSON.
+     */
     public void guardarProductosEnArchivo() {
         try (FileWriter writer = new FileWriter("demo/productos.json")) {
             gson.toJson(productos, writer);
@@ -159,6 +216,11 @@ public class almacenProductos {
         }
     }
 
+    /**
+     * Busca un producto por su ID.
+     * @param id El ID del producto a buscar.
+     * @return El producto encontrado o `null` si no existe.
+     */
     public producto buscarPorId(int id) {
         for (producto p : productos) {
             if (p.getIdProducto() == id) return p;

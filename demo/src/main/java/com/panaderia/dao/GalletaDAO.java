@@ -15,17 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Clase que implementa el acceso a datos (DAO) para la entidad `galleta`.
+ * Permite realizar operaciones CRUD y gestionar la persistencia de datos en un archivo JSON.
+ */
 public class GalletaDAO implements ProductoDAO<galleta> {
-    private List<galleta> galletas;
-    private final String ARCHIVO_GALLETAS = "demo/galletas.json";
-    private final Gson gson;
-    
+    private List<galleta> galletas; // Lista de galletas en memoria
+    private final String ARCHIVO_GALLETAS = "demo/galletas.json"; // Ruta del archivo JSON
+    private final Gson gson; // Objeto Gson para serialización/deserialización
+
+    /**
+     * Constructor de la clase GalletaDAO.
+     * Configura los serializadores y deserializadores personalizados para la clase `galleta`.
+     * Carga los datos desde el archivo JSON al inicializar.
+     */
     public GalletaDAO() {
         this.galletas = new ArrayList<>();
         
         GsonBuilder gsonBuilder = new GsonBuilder();
         
-        // Configurarion serializador/deserializador
+        // Configuración del deserializador personalizado
         JsonDeserializer<galleta> deserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
             
@@ -40,6 +49,7 @@ public class GalletaDAO implements ProductoDAO<galleta> {
             return new galleta(id, nombre, stock, costo, precio, tieneChispas);
         };
         
+        // Configuración del serializador personalizado
         JsonSerializer<galleta> serializer = (src, typeOfSrc, context) -> {
             JsonObject jsonObject = new JsonObject();
             
@@ -59,9 +69,15 @@ public class GalletaDAO implements ProductoDAO<galleta> {
         gsonBuilder.setPrettyPrinting();
         gson = gsonBuilder.create();
         
+        // Cargar los datos desde el archivo JSON
         cargarTodos();
     }
 
+    /**
+     * Guarda una nueva galleta en la lista y persiste los datos en el archivo JSON.
+     * Si el producto no tiene ID, se genera uno automáticamente.
+     * @param producto La galleta a guardar.
+     */
     @Override
     public void guardar(galleta producto) {
         if (producto.getIdProducto() == 0) {
@@ -76,6 +92,11 @@ public class GalletaDAO implements ProductoDAO<galleta> {
         guardarTodos();
     }
 
+    /**
+     * Elimina una galleta de la lista por su ID y persiste los cambios.
+     * @param idProducto El ID de la galleta a eliminar.
+     * @return `true` si se eliminó correctamente, `false` en caso contrario.
+     */
     @Override
     public boolean eliminar(int idProducto) {
         boolean eliminado = galletas.removeIf(p -> p.getIdProducto() == idProducto);
@@ -85,6 +106,11 @@ public class GalletaDAO implements ProductoDAO<galleta> {
         return eliminado;
     }
 
+    /**
+     * Actualiza una galleta existente en la lista y persiste los cambios.
+     * @param producto La galleta con los datos actualizados.
+     * @return `true` si se actualizó correctamente, `false` en caso contrario.
+     */
     @Override
     public boolean actualizar(galleta producto) {
         for (int i = 0; i < galletas.size(); i++) {
@@ -97,6 +123,11 @@ public class GalletaDAO implements ProductoDAO<galleta> {
         return false;
     }
 
+    /**
+     * Busca una galleta por su ID.
+     * @param idProducto El ID de la galleta a buscar.
+     * @return La galleta encontrada o `null` si no existe.
+     */
     @Override
     public galleta buscarPorId(int idProducto) {
         return galletas.stream()
@@ -105,11 +136,20 @@ public class GalletaDAO implements ProductoDAO<galleta> {
                 .orElse(null);
     }
 
+    /**
+     * Obtiene todas las galletas almacenadas.
+     * @return Una lista con todas las galletas.
+     */
     @Override
     public List<galleta> obtenerTodos() {
         return new ArrayList<>(galletas);
     }
 
+    /**
+     * Filtra las galletas por nombre.
+     * @param nombre El nombre o parte del nombre a buscar.
+     * @return Una lista de galletas que coinciden con el criterio.
+     */
     @Override
     public List<galleta> filtrarPorNombre(String nombre) {
         if (nombre == null || nombre.trim().isEmpty()) {
@@ -122,6 +162,12 @@ public class GalletaDAO implements ProductoDAO<galleta> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Filtra las galletas por un rango de precios.
+     * @param minPrecio El precio mínimo.
+     * @param maxPrecio El precio máximo.
+     * @return Una lista de galletas dentro del rango de precios.
+     */
     @Override
     public List<galleta> filtrarPorPrecio(double minPrecio, double maxPrecio) {
         return galletas.stream()
@@ -129,19 +175,33 @@ public class GalletaDAO implements ProductoDAO<galleta> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Filtra las galletas por un rango de cantidades en stock.
+     * @param minCantidad La cantidad mínima.
+     * @param maxCantidad La cantidad máxima.
+     * @return Una lista de galletas dentro del rango de cantidades.
+     */
     @Override
     public List<galleta> filtrarPorCantidad(int minCantidad, int maxCantidad) {
         return galletas.stream()
                 .filter(p -> p.getStock() >= minCantidad && p.getStock() <= maxCantidad)
                 .collect(Collectors.toList());
     }
-    
+
+    /**
+     * Filtra las galletas según si tienen chispas o no.
+     * @param tieneChispas `true` para buscar galletas con chispas, `false` para sin chispas.
+     * @return Una lista de galletas que cumplen con el criterio.
+     */
     public List<galleta> filtrarPorChispas(boolean tieneChispas) {
         return galletas.stream()
                 .filter(p -> p.getTieneChispas() == tieneChispas)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Guarda todas las galletas en el archivo JSON.
+     */
     @Override
     public void guardarTodos() {
         try (FileWriter writer = new FileWriter(ARCHIVO_GALLETAS)) {
@@ -152,6 +212,10 @@ public class GalletaDAO implements ProductoDAO<galleta> {
         }
     }
 
+    /**
+     * Carga todas las galletas desde el archivo JSON.
+     * Si el archivo no existe o está vacío, inicializa una lista vacía.
+     */
     @Override
     public void cargarTodos() {
         try (FileReader reader = new FileReader(ARCHIVO_GALLETAS)) {
