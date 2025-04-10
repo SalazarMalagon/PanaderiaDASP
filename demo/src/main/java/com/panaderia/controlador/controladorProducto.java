@@ -12,13 +12,25 @@ import javax.swing.JButton;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Clase que actúa como controlador para la gestión de productos.
+ * Gestiona la interacción entre las vistas, los servicios y los modelos relacionados con los productos.
+ */
 public class controladorProducto {
 
-    private vistaProductoGUI vistaProductoGUI;
-    private vistaReporte vistaReporte;
-    private GestorProductos gestorProductos;
-    private generadorReporte generadorReporte;
-    
+    private vistaProductoGUI vistaProductoGUI; // Vista principal de productos
+    private vistaReporte vistaReporte; // Vista para reportes
+    private GestorProductos gestorProductos; // Servicio para gestionar productos
+    private generadorReporte generadorReporte; // Servicio para generar reportes
+
+    /**
+     * Constructor de la clase controladorProducto.
+     * Inicializa las vistas y servicios necesarios para la gestión de productos.
+     * @param vistaProductoGUI La vista principal de productos.
+     * @param vistaReporte La vista para reportes.
+     * @param gestorProductos El servicio para gestionar productos.
+     * @param generadorReporte El servicio para generar reportes.
+     */
     public controladorProducto(vistaProductoGUI vistaProductoGUI, vistaReporte vistaReporte,
                                GestorProductos gestorProductos, generadorReporte generadorReporte) {
         this.vistaProductoGUI = vistaProductoGUI;
@@ -27,10 +39,17 @@ public class controladorProducto {
         this.generadorReporte = generadorReporte;
     }
 
+    /**
+     * Método que carga todos los productos desde el servicio.
+     */
     public void cargarProductos() {
         gestorProductos.cargarTodos();
     }
 
+    /**
+     * Método que permite agregar un nuevo producto.
+     * Solicita los datos desde la vista, valida la información y guarda el producto.
+     */
     public void agregarProducto() {
         try {
             producto nuevoProducto = vistaProductoGUI.solicitarDatosProducto();
@@ -38,7 +57,7 @@ public class controladorProducto {
                 nuevoProducto.validarCosto();
                 nuevoProducto.validarPrecioVenta();
                 nuevoProducto.validarStockNoNegativo();
-                
+
                 gestorProductos.guardarProducto(nuevoProducto);
                 gestorProductos.guardarTodos();
                 listarProductos();
@@ -49,6 +68,10 @@ public class controladorProducto {
         }
     }
 
+    /**
+     * Método que permite actualizar un producto existente.
+     * Solicita los datos desde la vista, valida la información y actualiza el producto.
+     */
     public void actualizarProducto() {
         try {
             int idProducto = vistaProductoGUI.obtenerIdProductoSeleccionado();
@@ -59,14 +82,14 @@ public class controladorProducto {
             producto productoActualizado = vistaProductoGUI.solicitarDatosProducto();
             if (productoActualizado != null) {
                 productoActualizado.setIdProducto(idProducto);
-                
+
                 productoActualizado.validarCosto();
                 productoActualizado.validarPrecioVenta();
                 productoActualizado.validarStockNoNegativo();
-                
+
                 gestorProductos.actualizarProducto(productoActualizado);
                 gestorProductos.guardarTodos();
-                listarProductos(); 
+                listarProductos();
                 JOptionPane.showMessageDialog(null, "Producto actualizado correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
@@ -74,6 +97,10 @@ public class controladorProducto {
         }
     }
 
+    /**
+     * Método que permite eliminar un producto.
+     * Solicita confirmación antes de proceder con la eliminación.
+     */
     public void eliminarProducto() {
         int idProducto = vistaProductoGUI.obtenerIdProductoSeleccionado();
         if (idProducto == -1) {
@@ -91,11 +118,15 @@ public class controladorProducto {
         }
     }
 
+    /**
+     * Método que genera un reporte en formato CSV con los productos actuales.
+     * Solicita al usuario la ubicación para guardar el archivo.
+     */
     public void generarReporte() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Guardar Reporte CSV");
         fileChooser.setSelectedFile(new java.io.File("reporte_productos.csv"));
-        
+
         int seleccion = fileChooser.showSaveDialog(null);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             try {
@@ -115,9 +146,15 @@ public class controladorProducto {
         }
     }
 
+    /**
+     * Método que filtra los productos según un criterio y rango de valores.
+     * @param criterio El criterio de filtrado (nombre, precio, cantidad).
+     * @param valorMin El valor mínimo del rango.
+     * @param valorMax El valor máximo del rango.
+     */
     public void filtrarProductos(String criterio, String valorMin, String valorMax) {
         List<producto> resultado = null;
-        
+
         try {
             switch (criterio.toLowerCase()) {
                 case "nombre":
@@ -138,7 +175,7 @@ public class controladorProducto {
                         "Criterio no válido", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
             }
-            
+
             if (resultado != null && !resultado.isEmpty()) {
                 vistaProductoGUI.mostrarProductosFiltrados(resultado);
                 JOptionPane.showMessageDialog(null, 
@@ -161,28 +198,39 @@ public class controladorProducto {
         }
     }
 
+    /**
+     * Método que obtiene todos los productos desde el servicio.
+     * @return Lista de productos.
+     */
     public List<producto> obtenerProductos() {
         return gestorProductos.obtenerTodosProductos();
     }
 
+    /**
+     * Método que lista todos los productos en la vista.
+     */
     public void listarProductos() {
         List<producto> productos = gestorProductos.obtenerTodosProductos();
         vistaProductoGUI.mostrarListaProductos(productos);
     }
 
+    /**
+     * Método que inicializa los listeners de la vista.
+     * Configura las acciones para agregar, actualizar, eliminar, generar reportes y buscar productos.
+     */
     public void inicializar() {
         vistaProductoGUI.addAgregarListener(e -> agregarProducto());
         vistaProductoGUI.addActualizarListener(e -> actualizarProducto());
         vistaProductoGUI.addEliminarListener(e -> eliminarProducto());
         vistaProductoGUI.addGenerarReporteListener(e -> generarReporte());
-    
+
         vistaProductoGUI.addBuscarListener(e -> {
             String texto = vistaProductoGUI.getTextoBusqueda();
             if (texto.isEmpty()) {
                 listarProductos();
                 return;
             }
-    
+
             try {
                 if (texto.matches("\\d+")) {
                     int id = Integer.parseInt(texto);
@@ -205,11 +253,11 @@ public class controladorProducto {
                 JOptionPane.showMessageDialog(null, "Error al filtrar: " + ex.getMessage());
             }
         });
-        
+
         vistaProductoGUI.addFiltrarListener(e -> {
             JButton sourceButton = (JButton) e.getSource();
             String buttonText = sourceButton.getText();
-            
+
             if ("Aplicar Filtro".equals(buttonText)) {
                 String criterio = vistaProductoGUI.getCriterioBusqueda();
                 String valorMin = vistaProductoGUI.getValorMinBusqueda();
